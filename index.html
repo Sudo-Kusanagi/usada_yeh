@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usada Yeh - Pengobatan Tradisional Bali</title>
+    <!-- Memuat Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Memuat Font Inter dari Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Menggunakan font Inter sebagai default */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Style untuk transisi yang mulus */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <!-- Kontainer utama untuk aplikasi -->
+    <div id="root"></div>
+
+    <script>
+        // --- SIMULASI DATABASE (Berdasarkan file nana.sql) ---
+        const db = {
+            penyakit: [
+                { id_penyakit: 1, jenis_penyakit: 'Panas' },
+                { id_penyakit: 2, jenis_penyakit: 'Sakit Mata' },
+                { id_penyakit: 3, jenis_penyakit: 'Sakit Perut' },
+                { id_penyakit: 4, jenis_penyakit: 'Sakit Kepala' },
+                { id_penyakit: 5, jenis_penyakit: 'Jampi' },
+                { id_penyakit: 6, jenis_penyakit: 'Sakit Persendian' },
+                { id_penyakit: 7, jenis_penyakit: 'Cekutan' },
+                { id_penyakit: 8, jenis_penyakit: 'Obat penawar ludra kuta (Cetik)' },
+                { id_penyakit: 9, jenis_penyakit: 'Obat Kunda Wijaya (Cetik)' },
+                { id_penyakit: 10, jenis_penyakit: 'Obat penawar Mpu Baradah (Cetik)' },
+                { id_penyakit: 11, jenis_penyakit: 'Penawar Sang Hyang Tunggal (Cetik)' },
+                { id_penyakit: 12, jenis_penyakit: 'Sang Hyang Dharma (Cetik)' },
+                { id_penyakit: 13, jenis_penyakit: 'Sutasoma (Cetik)' },
+                { id_penyakit: 14, jenis_penyakit: 'Wisnu Murti (Cetik)' },
+            ],
+            sarana: [
+                { id_sarana: 1, deskripsi_sarana: 'Air murni dari sumber mata air.', nama_ilmiah: 'Aqua purificata', url_gambar: 'https://i.postimg.cc/HsMZ21jc/air.jpg' },
+                { id_sarana: 2, deskripsi_sarana: 'Air murni dari sumber mata air.', nama_ilmiah: 'Aqua purificata', url_gambar: 'https://i.postimg.cc/HsMZ21jc/air.jpg' },
+                { id_sarana: 3, deskripsi_sarana: 'Air murni dari sumber mata air.', nama_ilmiah: 'Aqua purificata', url_gambar: 'https://i.postimg.cc/HsMZ21jc/air.jpg' },
+                { id_sarana: 4, deskripsi_sarana: 'Air murni dari sumber mata air.', nama_ilmiah: 'Aqua purificata', url_gambar: 'https://i.postimg.cc/HsMZ21jc/air.jpg' },
+                { id_sarana: 5, deskripsi_sarana: 'Air murni dari sumber mata air.', nama_ilmiah: 'Aqua purificata', url_gambar: 'https://i.postimg.cc/HsMZ21jc/air.jpg' },
+                { id_sarana: 6, deskripsi_sarana: 'Air murni dari sumber mata air.', nama_ilmiah: 'Aqua purificata', url_gambar: 'https://i.postimg.cc/HsMZ21jc/air.jpg' },
+                { id_sarana: 7, deskripsi_sarana: 'Pinang muda dan air dari kasimbukan.', nama_ilmiah: 'Areca catechu & Paederia foetida', url_gambar: 'https://i.postimg.cc/J4CgSzfc/Air-Pinang-muda-dan-air-dari-kasimbukan.jpg' },
+                { id_sarana: 8, deskripsi_sarana: 'Tempurung kelapa, lima macam bunga, air.', nama_ilmiah: 'Cocos nucifera & Flos', url_gambar: 'https://i.postimg.cc/6p9P5158/Tempurung-kelapa-lima-macam-bunga-air.jpg' },
+                // --- CONTOH PERUBAHAN DENGAN LINK BARU ---
+                { id_sarana: 9, deskripsi_sarana: 'Tempurung kelapa, bunga merah, air.', nama_ilmiah: 'Cocos nucifera & Hibiscus rosa-sinensis', url_gambar: 'https://i.postimg.cc/KjBW46MM/Tempurung-kelapa-bunga-merah-air.jpg' }, // <-- Ganti URL ini dengan "Direct Link" dari Postimages
+                { id_sarana: 10, deskripsi_sarana: 'Tempurung kelapa hitam, bunga putih, air.', nama_ilmiah: 'Cocos nucifera & Jasminum sambac', url_gambar: 'https://i.postimg.cc/VsCp7CVk/Tempurung-kelapa-hitam-bunga-putih-air.jpg' },
+                { id_sarana: 11, deskripsi_sarana: 'Tempurung kelapa, bunga putih, air.', nama_ilmiah: 'Cocos nucifera & Jasminum sambac', url_gambar: 'https://i.postimg.cc/VL9Twc1y/Tempurung-kelapa-bunga-putih-air.jpg' },
+                { id_sarana: 12, deskripsi_sarana: 'Tempurung kelapa hitam dan bunga warna hitam.', nama_ilmiah: 'Cocos nucifera & Flos niger', url_gambar: 'https://i.postimg.cc/TwZSddpx/Tempurung-kelapa-hitam-dan-bunga-warna-hitam.jpg' },
+                { id_sarana: 13, deskripsi_sarana: 'Tempurung kelapa, bunga putih, air.', nama_ilmiah: 'Cocos nucifera & Jasminum sambac', url_gambar: 'https://i.postimg.cc/VL9Twc1y/Tempurung-kelapa-bunga-putih-air.jpg' },
+                { id_sarana: 14, deskripsi_sarana: 'Air mumbul, tempurung kelapa, bunga wari dan bunga sudamala.', nama_ilmiah: 'Cocos nucifera & Calotropis gigantea', url_gambar: 'https://i.postimg.cc/B68kfLZN/Air-mumbul-tempurung-kelapa-bunga-wari-dan-bunga-sudamala.jpg' },
+            ],
+            mantra: [
+                { id_mantra: 1, teks_mantra: 'Ong mang hang, Ung mang ang ang, uh mang ih, ong ih ah' },
+                { id_mantra: 2, teks_mantra: 'Om taya ah ih, om taya I ah, Om Taya ing' },
+                { id_mantra: 3, teks_mantra: 'Mang mang ung ayang, Om ing mang ang, Om taya ah' },
+                { id_mantra: 4, teks_mantra: 'Om mang ah, Om mang ih, om ang ung mang ing' },
+                { id_mantra: 5, teks_mantra: 'ong ih ah, om ah ih' },
+                { id_mantra: 6, teks_mantra: 'ayang siang om, om mang ang siang' },
+                { id_mantra: 7, teks_mantra: 'Om nama swaha' },
+                { id_mantra: 8, teks_mantra: 'Om herang ing' },
+                { id_mantra: 9, teks_mantra: 'Om ung ang mang ah ih, om ang ung mang ing' },
+                { id_mantra: 10, teks_mantra: 'Om batara Mpu Baradah, anempur gunane I calonarang, apa angus Empu Baradah sakti, anggur wong manusa ye ki, ang sidrastru urip, teka urip' },
+                { id_mantra: 11, teks_mantra: 'Om ang ung mang ing' },
+                { id_mantra: 12, teks_mantra: 'Om ung ung ing ih' },
+                { id_mantra: 13, teks_mantra: 'Pang ung ang mang ih' },
+                { id_mantra: 14, teks_mantra: 'Om ih ung aya mang ih' },
+            ],
+            metode_pengobatan: [
+                { id_metode: 1, metode1: 'Sembur', metode2: 'Sirat', metode3: 'Jamu/diminum', id_sarana: 1 },
+                { id_metode: 2, metode1: 'Sirat', metode2: 'Sembur', metode3: 'Usapkan/raupan', id_sarana: 2 },
+                { id_metode: 3, metode1: 'Jamu/diminum', metode2: 'Sirat', metode3: 'Raup', id_sarana: 3 },
+                { id_metode: 4, metode1: 'Jamu/diminum', metode2: 'Sirat', metode3: 'Usapkan/raupan', id_sarana: 4 },
+                { id_metode: 5, metode1: 'Sirat', metode2: 'Jamu', metode3: null, id_sarana: 5 },
+                { id_metode: 6, metode1: 'Sirat', metode2: null, metode3: null, id_sarana: 6 },
+                { id_metode: 7, metode1: 'Jamu', metode2: null, metode3: null, id_sarana: 7 },
+                { id_metode: 8, metode1: 'Air ditaruh di dalam tempurung kelapa, diisi 5 macam bunga', metode2: null, metode3: null, id_sarana: 8 },
+                { id_metode: 9, metode1: 'Air ditaruh di tempurung kelapa (sibuh) serta bunga berwarna merah', metode2: null, metode3: null, id_sarana: 9 },
+                { id_metode: 10, metode1: 'Air taruh dalam tempurung kelapa yang berwarna hitam (sibuh) serta berisi bunga putih', metode2: null, metode3: null, id_sarana: 10 },
+                { id_metode: 11, metode1: 'Air ditaruh dalam tempurung kelapa, bunga putih', metode2: null, metode3: null, id_sarana: 11 },
+                { id_metode: 12, metode1: 'Sarana air ditaruh dalam tempurung kelapa hitam, bunga juga hitam', metode2: null, metode3: null, id_sarana: 12 },
+                { id_metode: 13, metode1: 'Sarananya air yang jernih, suci, bersih, taruh dalam tempurung kelapa serta bunga putih', metode2: null, metode3: null, id_sarana: 13 },
+                { id_metode: 14, metode1: 'Air mumbul ditaruh di dalam tempurung kelapa, serta bunga wari merah susun, bungan sudamala', metode2: null, metode3: null, id_sarana: 14 },
+            ],
+            pengobatan: [
+                { id_pengobatan: 1, id_penyakit: 1, id_mantra: 1, id_metode: 1 },
+                { id_pengobatan: 2, id_penyakit: 2, id_mantra: 2, id_metode: 2 },
+                { id_pengobatan: 3, id_penyakit: 3, id_mantra: 3, id_metode: 3 },
+                { id_pengobatan: 4, id_penyakit: 4, id_mantra: 4, id_metode: 4 },
+                { id_pengobatan: 5, id_penyakit: 5, id_mantra: 5, id_metode: 5 },
+                { id_pengobatan: 6, id_penyakit: 6, id_mantra: 6, id_metode: 6 },
+                { id_pengobatan: 7, id_penyakit: 7, id_mantra: 7, id_metode: 7 },
+                { id_pengobatan: 8, id_penyakit: 8, id_mantra: 8, id_metode: 8 },
+                { id_pengobatan: 9, id_penyakit: 9, id_mantra: 9, id_metode: 9 },
+                { id_pengobatan: 10, id_penyakit: 10, id_mantra: 10, id_metode: 10 },
+                { id_pengobatan: 11, id_penyakit: 11, id_mantra: 11, id_metode: 11 },
+                { id_pengobatan: 12, id_penyakit: 12, id_mantra: 12, id_metode: 12 },
+                { id_pengobatan: 13, id_penyakit: 13, id_mantra: 13, id_metode: 13 },
+                { id_pengobatan: 14, id_penyakit: 14, id_mantra: 14, id_metode: 14 },
+            ],
+        };
+
+        // --- Ikon SVG sebagai string ---
+        const icons = {
+            leaf: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 4 13H2a9 9 0 0 0 18 0h-2a7 7 0 0 1-7 7Z"></path><path d="M12 13V3"></path></svg>`,
+            microscope: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 18h8"></path><path d="m3 22 7-7"></path><path d="M14 2 12 4 4 12l2 2 8-8 2-2Z"></path><path d="m18 2 4 4"></path><path d="m6 12 4-4"></path></svg>`,
+            bookOpen: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2Z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7Z"></path></svg>`,
+            search: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>`,
+            arrowLeft: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>`,
+            imagePlaceholder: `<svg class="w-full h-full text-gray-300" fill="currentColor" viewBox="0 0 24 24"><path d="M24 20.993V24H0v-2.997A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" /></svg>`
+        };
+
+        // --- State Management ---
+        let state = {
+            view: 'home', // 'home', 'pengobatan', 'detailPenyakit', dll.
+            selectedId: null,
+            searchQuery: '',
+        };
+
+        const root = document.getElementById('root');
+
+        // --- Fungsi Helper untuk Data ---
+        const getPengobatanDetails = (penyakitId) => {
+            const pengobatanRel = db.pengobatan.find(p => p.id_penyakit === penyakitId);
+            if (!pengobatanRel) return null;
+            const penyakit = db.penyakit.find(p => p.id_penyakit === penyakitId);
+            const mantra = db.mantra.find(m => m.id_mantra === pengobatanRel.id_mantra);
+            const metode = db.metode_pengobatan.find(m => m.id_metode === pengobatanRel.id_metode);
+            const sarana = db.sarana.find(s => s.id_sarana === metode.id_sarana);
+            return { penyakit, mantra, metode, sarana };
+        };
+
+        const getSaranaDetails = (saranaId) => {
+            const sarana = db.sarana.find(s => s.id_sarana === saranaId);
+            if (!sarana) return null;
+            const relatedPengobatan = db.metode_pengobatan
+                .filter(m => m.id_sarana === saranaId)
+                .map(metode => db.pengobatan.filter(p => p.id_metode === metode.id_metode).map(pr => getPengobatanDetails(pr.id_penyakit)))
+                .flat().filter(Boolean);
+            return { sarana, usedFor: relatedPengobatan };
+        };
+
+        const getMantraDetails = (mantraId) => {
+            const mantra = db.mantra.find(m => m.id_mantra === mantraId);
+            if (!mantra) return null;
+            const relatedPengobatan = db.pengobatan
+                .filter(p => p.id_mantra === mantraId)
+                .map(p => getPengobatanDetails(p.id_penyakit)).filter(Boolean);
+            return { mantra, usedFor: relatedPengobatan };
+        };
+
+        // --- Fungsi Pencarian & Rekomendasi ---
+        const getSearchSuggestions = (query) => {
+            const lowerCaseQuery = query.toLowerCase().trim();
+            if (!lowerCaseQuery) return [];
+            const suggestions = [];
+            const addedSuggestions = new Set();
+            db.penyakit.filter(p => p.jenis_penyakit.toLowerCase().includes(lowerCaseQuery)).forEach(penyakit => {
+                const diseaseName = penyakit.jenis_penyakit.replace(/ \(Cetik\)$/i, '').trim();
+                if (!addedSuggestions.has(diseaseName)) { suggestions.push(diseaseName); addedSuggestions.add(diseaseName); }
+                const saranaSuggestion = `Sarana untuk ${diseaseName}`;
+                if (!addedSuggestions.has(saranaSuggestion)) { suggestions.push(saranaSuggestion); addedSuggestions.add(saranaSuggestion); }
+                const mantraSuggestion = `Mantra untuk ${diseaseName}`;
+                if (!addedSuggestions.has(mantraSuggestion)) { suggestions.push(mantraSuggestion); addedSuggestions.add(mantraSuggestion); }
+            });
+            db.sarana.filter(s => s.deskripsi_sarana.toLowerCase().includes(lowerCaseQuery) || s.nama_ilmiah.toLowerCase().includes(lowerCaseQuery)).forEach(s => {
+                const saranaName = s.deskripsi_sarana.split(',')[0];
+                if (!addedSuggestions.has(saranaName)) { suggestions.push(saranaName); addedSuggestions.add(saranaName); }
+            });
+            return suggestions.slice(0, 7);
+        };
+
+        const performSearch = (query) => {
+            const lowerCaseQuery = query.toLowerCase().trim();
+            if (!lowerCaseQuery) return null;
+            let results = { penyakit: [], sarana: [], mantra: [], intent: null };
+            let intentMatch = lowerCaseQuery.match(/^mantra(m)? untuk (obat )?(.+)/) || lowerCaseQuery.match(/^sarana untuk (obat )?(.+)/);
+            if (intentMatch) {
+                const penyakitName = intentMatch[3] || intentMatch[2];
+                const foundPenyakit = db.penyakit.find(p => p.jenis_penyakit.toLowerCase().includes(penyakitName.trim()));
+                if (foundPenyakit) {
+                    const details = getPengobatanDetails(foundPenyakit.id_penyakit);
+                    if (details) { results.intent = { type: 'penyakit_detail', data: details }; return results; }
+                }
+            }
+            results.penyakit = db.penyakit.filter(p => p.jenis_penyakit.toLowerCase().includes(lowerCaseQuery));
+            results.sarana = db.sarana.filter(s => s.deskripsi_sarana.toLowerCase().includes(lowerCaseQuery) || s.nama_ilmiah.toLowerCase().includes(lowerCaseQuery));
+            results.mantra = db.mantra.filter(m => m.teks_mantra.toLowerCase().includes(lowerCaseQuery));
+            if (lowerCaseQuery === 'cetik') { results.penyakit = db.penyakit.filter(p => p.jenis_penyakit.toLowerCase().includes('cetik')); }
+            return results;
+        };
+
+        // --- Komponen-Komponen (sebagai fungsi yang mengembalikan string HTML) ---
+        const HeaderComponent = (showBackButton) => `
+            <header class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-30 p-4 flex items-center">
+                ${showBackButton ? `<button data-action="goHome" class="mr-4 p-2 rounded-full hover:bg-gray-200 transition-colors">${icons.arrowLeft}</button>` : ''}
+                <h1 class="text-2xl font-bold text-emerald-800">Usada Yeh</h1>
+            </header>
+        `;
+
+        const HomePageComponent = () => {
+             const namaPengguna = "Pengguna";
+             return `
+                <div class="p-6 text-center bg-emerald-50">
+                    <h2 class="text-3xl font-light text-gray-700">Halo, <span class="font-semibold text-emerald-700">${namaPengguna}</span></h2>
+                    <p class="text-gray-500 mt-2">Selamat datang di platform edukasi pengobatan tradisional Bali.</p>
+                </div>
+                <div class="p-6">
+                    <div class="relative mb-8 max-w-2xl mx-auto">
+                        <form id="search-form">
+                            <div class="relative">
+                               <input id="search-input" type="text" placeholder="Cari penyakit, bahan, atau mantra..." class="w-full p-4 pl-12 border border-gray-300 rounded-full focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition" autocomplete="off" />
+                                <div class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">${icons.search}</div>
+                            </div>
+                        </form>
+                        <div id="suggestions-container" class="absolute z-20 w-full"></div>
+                    </div>
+                    <div class="mb-8 p-6 bg-white rounded-lg shadow-sm max-w-3xl mx-auto">
+                        <h3 class="text-xl font-bold text-emerald-800 mb-2">Sejarah Usada Yeh</h3>
+                        <p class="text-gray-600 leading-relaxed">Usada Yeh adalah bagian dari kearifan lokal Bali yang memanfaatkan kekuatan air sebagai media penyembuhan. Teknik ini menggabungkan doa (mantra), bahan-bahan alami (sarana), dan metode khusus yang diwariskan secara turun-temurun. Aplikasi ini bertujuan untuk melestarikan dan menyebarkan pengetahuan berharga ini kepada generasi sekarang.</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-3xl mx-auto">
+                        <button data-action="setView" data-view="pengobatan" class="p-6 bg-emerald-600 text-white rounded-lg shadow-md hover:bg-emerald-700 transition-all text-left flex items-start">
+                            <div class="bg-white/20 p-3 rounded-full mr-4">${icons.microscope}</div>
+                            <div><h3 class="text-lg font-bold">Fitur Pengobatan</h3><p class="text-sm opacity-90">Lihat daftar penyakit dan cara pengobatannya.</p></div>
+                        </button>
+                        <button data-action="setView" data-view="bahan" class="p-6 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700 transition-all text-left flex items-start">
+                            <div class="bg-white/20 p-3 rounded-full mr-4">${icons.leaf}</div>
+                            <div><h3 class="text-lg font-bold">Eksplorasi Bahan</h3><p class="text-sm opacity-90">Pelajari berbagai sarana/bahan yang digunakan.</p></div>
+                        </button>
+                        <button data-action="setView" data-view="mantra" class="p-6 bg-teal-600 text-white rounded-lg shadow-md hover:bg-teal-700 transition-all text-left flex items-start">
+                            <div class="bg-white/20 p-3 rounded-full mr-4">${icons.bookOpen}</div>
+                            <div><h3 class="text-lg font-bold">Fitur Mantram</h3><p class="text-sm opacity-90">Temukan mantra-mantra penyembuhan.</p></div>
+                        </button>
+                    </div>
+                </div>
+             `;
+        };
+
+        const DetailCardComponent = (title, icon, content) => `
+            <div class="bg-white rounded-lg shadow-sm p-5">
+                <div class="flex items-center mb-3">
+                    <div class="text-emerald-600 mr-3">${icon}</div>
+                    <h3 class="text-lg font-bold text-emerald-800">${title}</h3>
+                </div>
+                <div class="pl-8 text-gray-600 space-y-2">${content}</div>
+            </div>
+        `;
+
+        const PenyakitDetailPageComponent = (id) => {
+            const data = getPengobatanDetails(id);
+            if (!data) return `<p class="p-6 text-center text-gray-500">Data tidak ditemukan.</p>`;
+            const { penyakit, sarana, metode, mantra } = data;
+            const metodeList = [metode.metode1, metode.metode2, metode.metode3].filter(Boolean).map(m => `<li>${m}</li>`).join('');
+
+            return `
+                <div class="p-6 bg-gray-50 rounded-lg">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-6">${penyakit.jenis_penyakit}</h2>
+                    <div class="space-y-4">
+                        <div class="w-full h-48 md:h-64 bg-gray-200 rounded-lg overflow-hidden shadow-lg">
+                            <img src="${sarana.url_gambar || ''}" alt="Gambar untuk ${sarana.deskripsi_sarana}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                            <div class="w-full h-full items-center justify-center bg-gray-100" style="display: none;">${icons.imagePlaceholder}</div>
+                        </div>
+                        ${DetailCardComponent('Sarana yang Digunakan', icons.leaf, `<p class="font-semibold">${sarana.deskripsi_sarana}</p><p class="text-sm italic">${sarana.nama_ilmiah}</p>`)}
+                        ${DetailCardComponent('Cara Pengobatan', icons.microscope, `<ul class="list-disc list-inside">${metodeList}</ul>`)}
+                        ${DetailCardComponent('Mantra', icons.bookOpen, `<p class="font-mono text-sm bg-gray-100 p-3 rounded">${mantra.teks_mantra}</p>`)}
+                    </div>
+                </div>
+            `;
+        };
+
+        const SearchResultsPageComponent = (query) => {
+            const results = performSearch(query);
+            if (!results) return `<p class="p-6 text-center text-gray-500">Silakan masukkan kata kunci pencarian.</p>`;
+
+            const { penyakit, sarana, mantra, intent } = results;
+            const noResults = !intent && penyakit.length === 0 && sarana.length === 0 && mantra.length === 0;
+
+            const createResultSection = (title, items, viewType, idKey, nameKey, subKey) => {
+                if (items.length === 0) return '';
+                const itemsHtml = items.map(item => `
+                    <li data-action="setView" data-view="${viewType}" data-id="${item[idKey]}" class="p-4 bg-white rounded-lg shadow-sm hover:shadow-md hover:bg-emerald-50 cursor-pointer transition">
+                        <p class="font-semibold text-emerald-700">${item[nameKey]}</p>
+                        ${subKey ? `<p class="text-sm text-gray-500 italic">${item[subKey]}</p>` : ''}
+                    </li>
+                `).join('');
+                return `
+                    <div class="mb-6">
+                        <h3 class="text-xl font-semibold text-gray-700 mb-3 border-b pb-2">${title}</h3>
+                        <ul class="space-y-3">${itemsHtml}</ul>
+                    </div>
+                `;
+            };
+
+            return `
+                <div class="p-6 max-w-3xl mx-auto">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6">Hasil Pencarian untuk: <span class="text-emerald-600">"${query}"</span></h2>
+                    ${noResults ? `<p class="text-gray-500 text-center p-8 bg-gray-50 rounded-lg">Tidak ada hasil yang ditemukan.</p>` : ''}
+                    ${intent ? `<div class="mb-6"><h3 class="text-xl font-semibold text-gray-700 mb-3 border-b pb-2">Jawaban Langsung</h3><div class="bg-white rounded-lg shadow-md">${PenyakitDetailPageComponent(intent.data.penyakit.id_penyakit)}</div></div>` : ''}
+                    ${createResultSection('Penyakit Ditemukan', penyakit, 'detailPenyakit', 'id_penyakit', 'jenis_penyakit')}
+                    ${createResultSection('Bahan (Sarana) Ditemukan', sarana, 'detailBahan', 'id_sarana', 'deskripsi_sarana', 'nama_ilmiah')}
+                    ${createResultSection('Mantra Ditemukan', mantra, 'detailMantra', 'id_mantra', 'teks_mantra')}
+                </div>
+            `;
+        };
+
+        const ListPageComponent = (title, items, viewType, idKey, nameKey, subKey, icon) => {
+            const itemsHtml = items.map(item => `
+                <li data-action="setView" data-view="${viewType}" data-id="${item[idKey]}" class="p-4 bg-white rounded-lg shadow-sm hover:shadow-md hover:bg-emerald-50 cursor-pointer transition flex items-center">
+                    ${item.url_gambar ? `<div class="w-16 h-16 rounded-md overflow-hidden mr-4 bg-gray-100 flex-shrink-0"><img src="${item.url_gambar}" alt="${item[nameKey]}" class="w-full h-full object-cover"></div>` : icon ? `<div class="w-16 h-16 rounded-md mr-4 flex-shrink-0 flex items-center justify-center text-gray-400">${icon}</div>` : ''}
+                    <div>
+                        <p class="font-semibold text-emerald-700">${item[nameKey]}</p>
+                        ${subKey && item[subKey] ? `<p class="text-sm text-gray-500 italic">${item[subKey]}</p>` : ''}
+                    </div>
+                </li>
+            `).join('');
+            return `
+                <div class="p-6 max-w-3xl mx-auto">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">${title}</h2>
+                    <ul class="space-y-3">${itemsHtml}</ul>
+                </div>
+            `;
+        };
+
+        const BahanDetailPageComponent = (id) => {
+            const data = getSaranaDetails(id);
+            if (!data) return `<p class="p-6 text-center text-gray-500">Data tidak ditemukan.</p>`;
+            const { sarana, usedFor } = data;
+            const uniqueUsedFor = Array.from(new Map(usedFor.map(item => [item.penyakit.id_penyakit, item])).values());
+            const usedForHtml = uniqueUsedFor.length > 0 ? uniqueUsedFor.map(({ penyakit }) => `<li>${penyakit.jenis_penyakit}</li>`).join('') : `<p>Informasi penggunaan tidak tersedia.</p>`;
+
+            return `
+                <div class="p-6 bg-gray-50 min-h-screen max-w-3xl mx-auto">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-2">${sarana.deskripsi_sarana}</h2>
+                    <p class="text-lg text-gray-500 italic mb-6">${sarana.nama_ilmiah}</p>
+                    <div class="space-y-4">
+                        <div class="w-full h-48 md:h-64 bg-gray-200 rounded-lg overflow-hidden shadow-lg">
+                           <img src="${sarana.url_gambar || ''}" alt="Gambar untuk ${sarana.deskripsi_sarana}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                           <div class="w-full h-full items-center justify-center bg-gray-100" style="display: none;">${icons.imagePlaceholder}</div>
+                        </div>
+                        ${DetailCardComponent('Deskripsi', icons.leaf, `<p>${sarana.deskripsi_sarana}</p>${sarana.deskripsi_sarana.includes('Pinang muda') ? `<p class="mt-2 text-sm text-blue-600">Hubungan bahan: Pinang muda dikombinasikan dengan air dari kasimbukan.</p>` : ''}`)}
+                        ${DetailCardComponent('Digunakan Untuk Mengobati', icons.microscope, `<ul class="list-disc list-inside space-y-1">${usedForHtml}</ul>`)}
+                    </div>
+                </div>
+            `;
+        };
+
+        const MantraDetailPageComponent = (id) => {
+            const data = getMantraDetails(id);
+            if (!data) return `<p class="p-6 text-center text-gray-500">Data tidak ditemukan.</p>`;
+            const { mantra, usedFor } = data;
+            const uniqueUsedFor = Array.from(new Map(usedFor.map(item => [item.penyakit.id_penyakit, item])).values());
+            const usedForHtml = uniqueUsedFor.length > 0 ? uniqueUsedFor.map(({ penyakit }) => `<li>${penyakit.jenis_penyakit}</li>`).join('') : `<p>Informasi penggunaan tidak tersedia.</p>`;
+            const saranaHtml = uniqueUsedFor.length > 0 ? uniqueUsedFor.map(({ sarana }) => `<li>${sarana.deskripsi_sarana}</li>`).join('') : `<p>Informasi bahan tidak tersedia.</p>`;
+
+            return `
+                <div class="p-6 bg-gray-50 min-h-screen max-w-3xl mx-auto">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">Detail Mantra</h2>
+                    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+                        <p class="font-mono text-lg text-gray-700 leading-relaxed">${mantra.teks_mantra}</p>
+                    </div>
+                    <div class="space-y-4">
+                        ${DetailCardComponent('Digunakan Untuk Menyembuhkan', icons.microscope, `<ul class="list-disc list-inside space-y-1">${usedForHtml}</ul>`)}
+                        ${DetailCardComponent('Kombinasi Bahan Terkait', icons.leaf, `<ul class="list-disc list-inside space-y-1">${saranaHtml}</ul>`)}
+                    </div>
+                </div>
+            `;
+        };
+
+        // --- Router dan Render ---
+        const render = () => {
+            let content = '';
+            const showBackButton = state.view !== 'home';
+
+            switch (state.view) {
+                case 'pengobatan':
+                    content = ListPageComponent('Daftar Penyakit', db.penyakit, 'detailPenyakit', 'id_penyakit', 'jenis_penyakit');
+                    break;
+                case 'detailPenyakit':
+                    content = PenyakitDetailPageComponent(state.selectedId);
+                    break;
+                case 'bahan':
+                    content = ListPageComponent('Eksplorasi Bahan (Sarana)', db.sarana, 'detailBahan', 'id_sarana', 'deskripsi_sarana', 'nama_ilmiah', icons.leaf);
+                    break;
+                case 'detailBahan':
+                    content = BahanDetailPageComponent(state.selectedId);
+                    break;
+                case 'mantra':
+                    content = ListPageComponent('Daftar Mantra', db.mantra, 'detailMantra', 'id_mantra', 'teks_mantra');
+                    break;
+                case 'detailMantra':
+                    content = MantraDetailPageComponent(state.selectedId);
+                    break;
+                case 'search':
+                    content = SearchResultsPageComponent(state.searchQuery);
+                    break;
+                case 'home':
+                default:
+                    content = HomePageComponent();
+                    break;
+            }
+
+            root.innerHTML = `
+                ${HeaderComponent(showBackButton)}
+                <main class="fade-in">${content}</main>
+                <footer class="text-center p-4 text-sm text-gray-400 mt-8">© 2025 Usada Yeh. Dibuat untuk tujuan edukasi.</footer>
+            `;
+
+            // Re-attach event listeners after every render
+            attachEventListeners();
+        };
+
+        // --- Event Listeners ---
+        const attachEventListeners = () => {
+            if (state.view === 'home') {
+                const searchForm = document.getElementById('search-form');
+                const searchInput = document.getElementById('search-input');
+                const suggestionsContainer = document.getElementById('suggestions-container');
+
+                searchForm.addEventListener('submit', e => {
+                    e.preventDefault();
+                    const searchTerm = searchInput.value.trim();
+                    if (searchTerm) {
+                        state.view = 'search';
+                        state.searchQuery = searchTerm;
+                        render();
+                    }
+                });
+
+                searchInput.addEventListener('input', () => {
+                    const searchTerm = searchInput.value;
+                    const suggestions = getSearchSuggestions(searchTerm);
+                    if (suggestions.length > 0) {
+                        suggestionsContainer.innerHTML = `
+                            <ul class="bg-white border border-gray-200 rounded-lg mt-1 shadow-lg overflow-hidden">
+                                ${suggestions.map(s => `<li data-action="selectSuggestion" data-suggestion="${s}" class="p-3 hover:bg-emerald-50 cursor-pointer flex items-center text-gray-700"><span class="mr-3 text-gray-400">${icons.search}</span><span>${s}</span></li>`).join('')}
+                            </ul>
+                        `;
+                    } else {
+                        suggestionsContainer.innerHTML = '';
+                    }
+                });
+
+                // Hide suggestions when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (!searchForm.contains(e.target)) {
+                        suggestionsContainer.innerHTML = '';
+                    }
+                });
+            }
+        };
+
+        // --- Global Event Delegation ---
+        document.body.addEventListener('click', e => {
+            let target = e.target;
+            while (target && target !== document.body) {
+                const action = target.dataset.action;
+                if (action) {
+                    e.preventDefault();
+                    switch (action) {
+                        case 'goHome':
+                            state.view = 'home';
+                            state.selectedId = null;
+                            state.searchQuery = '';
+                            render();
+                            break;
+                        case 'setView':
+                            state.view = target.dataset.view;
+                            state.selectedId = target.dataset.id ? parseInt(target.dataset.id) : null;
+                            render();
+                            break;
+                        case 'selectSuggestion':
+                            state.view = 'search';
+                            state.searchQuery = target.dataset.suggestion;
+                            render();
+                            break;
+                    }
+                    return; // Stop propagation after handling action
+                }
+                target = target.parentElement;
+            }
+        });
+
+        // --- Initial Render ---
+        render();
+
+    </script>
+</body>
+</html>
